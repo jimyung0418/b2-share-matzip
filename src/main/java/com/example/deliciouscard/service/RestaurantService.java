@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,9 +21,15 @@ public class RestaurantService {
         if (restaurant == null) {
             throw new IllegalArgumentException("해당 name 맛집이 없습니다.");
         }
-        log.info(restaurant.getRestaurantName());
-        log.info(restaurant.getCity());
-        log.info(String.valueOf(restaurant.getLikes()));
         return new RestaurantResponseDto(restaurant);
+    }
+
+    public List<RestaurantResponseDto> getRestaurantList() {
+        List<Restaurant> restaurantList = restaurantRepository.findAll();
+        List<RestaurantResponseDto> restaurantResponseDto = new ArrayList<>();
+
+        restaurantList.forEach(restaurant -> restaurantResponseDto.add(new RestaurantResponseDto(restaurant)));
+
+        return restaurantResponseDto;
     }
 }

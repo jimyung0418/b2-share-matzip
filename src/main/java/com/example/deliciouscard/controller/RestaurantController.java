@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/restaurants")
@@ -27,5 +29,11 @@ public class RestaurantController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RestaurantResponseDto>> getRestaurantList () {
+            List<RestaurantResponseDto> restaurantResponseDto = restaurantService.getRestaurantList();
+            return ResponseEntity.ok().body(restaurantResponseDto);
     }
 }
