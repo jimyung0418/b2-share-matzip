@@ -32,4 +32,13 @@ public class CommentController {
     public List<CommentResponseDto> getComments(@PathVariable Long id){
         return commentService.getComments();
     }
+    @PatchMapping("/{id}/comments/{commentId}")
+    public ResponseEntity<CommonResponseDto> modifyComment(@PathVariable Long id,@PathVariable Long commentId, @RequestBody CommentRequesDto req,@AuthenticationPrincipal UserDetailsImpl user){
+        try {
+            commentService.modifyComment(id,commentId,req,user);
+            return ResponseEntity.ok().body(new CommonResponseDto("수정완료", HttpStatus.OK.value()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+    }
 }

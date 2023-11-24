@@ -7,11 +7,13 @@ import com.example.deliciouscard.entity.Post;
 import com.example.deliciouscard.repository.CommentRepository;
 import com.example.deliciouscard.repository.PostRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +39,15 @@ public class CommentService {
             commentsList.add(new CommentResponseDto(commentList.get(i)));
         }
     return commentsList;
+    }
+
+    @Transactional
+    public void modifyComment(Long id, Long commentId, CommentRequesDto req, UserDetailsImpl user) {
+        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException(("해당 게시글이 없습니다.")));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new IllegalArgumentException(("해당 댓글이 없습니다.")));
+        if(!Objects.equals(comment.getUser().getId(), user.getUser().getId())){
+            throw new IllegalArgumentException("댓글 작성자만 수정 가능합니다");
+        }
+        comment.update(req);
     }
 }
