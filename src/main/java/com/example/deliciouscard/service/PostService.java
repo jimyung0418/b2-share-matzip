@@ -3,23 +3,42 @@ package com.example.deliciouscard.service;
 import com.example.deliciouscard.dto.PostRequestDto;
 import com.example.deliciouscard.dto.PostResponseDto;
 import com.example.deliciouscard.entity.Post;
+import com.example.deliciouscard.entity.Restaurant;
 import com.example.deliciouscard.repository.PostRepository;
+import com.example.deliciouscard.repository.RestaurantRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final RestaurantRepository restaurantRepository;
 
     public PostResponseDto createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetailsImpl) {
-        Post post = new Post(postRequestDto,userDetailsImpl);
+        // 이곳으로 넘어왔다는 것은 로그인한 유저 정보가 잘 넘어왔다는 것
+
+        // postRequestDto 로 들어온 restaurant 정보로 DB에 있는지 확인하기
+        String restaurantName = postRequestDto.getRestaurantName();
+        String city = postRequestDto.getCity();
+        Restaurant findRestaurant = restaurantRepository.findByRestaurantNameAndCity(restaurantName, city);
+        // restaurant DB에 없는 경우 요청한 값으로 저장을 해준다.
+        if (findRestaurant == null) {
+            findRestaurant = new Restaurant((postRequestDto));
+            restaurantRepository.save(findRestaurant);
+        }
+
+        // 작성한 post 정보로 Post 객체 만들기
+        Post post = new Post(postRequestDto,userDetailsImpl, findRestaurant);
+        // Post DB에 저장
         Post savePost = postRepository.save(post);
         PostResponseDto postResponseDto = new PostResponseDto(savePost);
 
