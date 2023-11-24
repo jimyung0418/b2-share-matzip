@@ -1,6 +1,5 @@
 package com.example.deliciouscard.service;
 
-import com.example.deliciouscard.dto.CommonResponseDto;
 import com.example.deliciouscard.dto.GuestbookRequestDto;
 import com.example.deliciouscard.dto.GuestbookResponseDto;
 import com.example.deliciouscard.entity.Guestbook;
@@ -9,14 +8,11 @@ import com.example.deliciouscard.repository.GuestbookRepository;
 import com.example.deliciouscard.repository.UserRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GuestbookService {
@@ -48,7 +44,6 @@ public class GuestbookService {
         // DTO로 변환 후 DTO리스트에 담기
         List<GuestbookResponseDto> responseDto = new ArrayList<>();
         for (Guestbook guestbook : guestbookList) {
-            log.info(guestbook.getAuthor());
             responseDto.add(new GuestbookResponseDto(guestbook));
         }
 
