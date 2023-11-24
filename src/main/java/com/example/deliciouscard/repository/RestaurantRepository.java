@@ -7,4 +7,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     Restaurant findByRestaurantNameAndCity(String restaurantName, String city);
 
+    Restaurant findByrestaurantName(String restaurantName);
 }
