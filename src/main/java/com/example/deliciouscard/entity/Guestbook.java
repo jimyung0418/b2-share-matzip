@@ -25,9 +25,13 @@ public class Guestbook extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Guestbook(GuestbookRequestDto guestbookRequestDto, UserDetailsImpl userDetails) {
+    @Column(nullable = false)
+    private String author;
+
+    public Guestbook(User user, GuestbookRequestDto guestbookRequestDto, UserDetailsImpl userDetails) {
         this.content = guestbookRequestDto.getContent();
-        this.user = userDetails.getUser();
+        this.user = user;
         this.confirm = false;
+        this.author = userDetails.getUser().getUsername();
     }
 }
