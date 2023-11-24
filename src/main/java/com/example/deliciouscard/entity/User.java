@@ -46,6 +46,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> postList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    List<CommentLikes> likes = new ArrayList<>();
+
 
     public User(UserRequestDto userRequestDto, String encodedPassword) {
         this.username = userRequestDto.getUsername();
