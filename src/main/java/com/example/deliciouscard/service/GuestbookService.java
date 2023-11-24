@@ -64,6 +64,20 @@ public class GuestbookService {
         guestbookRepository.delete(guestbook);
     }
 
+    @Transactional
+    public void confirmGuestbook(Long userId, Long guestbookId, UserDetailsImpl userDetails) {
+        // 해당 프로필이 존재하는지 확인
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id의 정보가 없습니다."));
+        // 프로필 본인이 맞는지 확인
+        if (!Objects.equals(userId ,userDetails.getUser().getId())) {
+            throw new IllegalArgumentException("본인만 확인 가능합니다.");
+        }
+        Guestbook guestbook = guestbookRepository.findById(guestbookId).orElseThrow(() -> new IllegalArgumentException("해당 id의 방명록이 없습니다."));
+
+        // 방명록 확인 완료
+        guestbook.checkGuestbook();
+    }
+
     private Guestbook checkProfileAndGuestbook(Long userId, Long guestbookId, UserDetailsImpl userDetails) {
         // 해당 프로필이 존재하는지 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id의 정보가 없습니다."));

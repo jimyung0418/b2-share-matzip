@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class GuestbookResponseDto extends CommonResponseDto{
     private String content;
     private String author;
+    private Boolean confirm;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -17,5 +18,6 @@ public class GuestbookResponseDto extends CommonResponseDto{
         this.author = guestbook.getAuthor();
         this.createdAt = guestbook.getCreatedAt();
         this.updatedAt = guestbook.getModifiedAt();
+        this.confirm = guestbook.getConfirm();
     }
 }

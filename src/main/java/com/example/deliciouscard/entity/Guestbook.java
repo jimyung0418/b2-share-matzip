@@ -38,4 +38,8 @@ public class Guestbook extends Timestamped {
     public void updateGuestbook(GuestbookRequestDto guestbookRequestDto) {
         this.content = guestbookRequestDto.getContent();
     }
+
+    public void checkGuestbook() {
+        this.confirm = true;
+    }
 }
