@@ -52,8 +52,19 @@ public class GuestbookService {
         // 변환된 DTO 반환
         return responseDto;
     }
+
     @Transactional
     public void patchGuestbook(Long userId, Long guestbookId, GuestbookRequestDto guestbookRequestDto, UserDetailsImpl userDetails) {
+        Guestbook guestbook = checkProfileAndGuestbook(userId, guestbookId, userDetails);
+        guestbook.updateGuestbook(guestbookRequestDto);
+    }
+
+    public void deleteGuestbook(Long userId, Long guestbookid, UserDetailsImpl userDetails) {
+        Guestbook guestbook = checkProfileAndGuestbook(userId, guestbookid, userDetails);
+        guestbookRepository.delete(guestbook);
+    }
+
+    private Guestbook checkProfileAndGuestbook(Long userId, Long guestbookId, UserDetailsImpl userDetails) {
         // 해당 프로필이 존재하는지 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id의 정보가 없습니다."));
 
@@ -64,8 +75,6 @@ public class GuestbookService {
         if (!Objects.equals(guestbook.getAuthor(), userDetails.getUser().getUsername())) {
             throw new IllegalArgumentException("방명록 작성자만 수정 가능합니다.");
         }
-
-        // 방명록 수정
-        guestbook.updateGuestbook(guestbookRequestDto);
+        return guestbook;
     }
 }
