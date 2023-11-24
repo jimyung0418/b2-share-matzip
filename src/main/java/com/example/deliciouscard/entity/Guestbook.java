@@ -34,4 +34,8 @@ public class Guestbook extends Timestamped {
         this.confirm = false;
         this.author = userDetails.getUser().getUsername();
     }
+
+    public void updateGuestbook(GuestbookRequestDto guestbookRequestDto) {
+        this.content = guestbookRequestDto.getContent();
+    }
 }

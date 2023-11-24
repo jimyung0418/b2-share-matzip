@@ -9,9 +9,11 @@ import com.example.deliciouscard.repository.UserRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +51,21 @@ public class GuestbookService {
 
         // 변환된 DTO 반환
         return responseDto;
+    }
+    @Transactional
+    public void patchGuestbook(Long userId, Long guestbookId, GuestbookRequestDto guestbookRequestDto, UserDetailsImpl userDetails) {
+        // 해당 프로필이 존재하는지 확인
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 id의 정보가 없습니다."));
+
+        // 해당 id의 방명록이 존재하는지 확인
+        Guestbook guestbook = guestbookRepository.findById(guestbookId).orElseThrow(() -> new IllegalArgumentException("해당 id 방명록이 없습니다."));
+
+        // 해당 방명록의 작성자와 일치하는지 확인
+        if (!Objects.equals(guestbook.getAuthor(), userDetails.getUser().getUsername())) {
+            throw new IllegalArgumentException("방명록 작성자만 수정 가능합니다.");
+        }
+
+        // 방명록 수정
+        guestbook.updateGuestbook(guestbookRequestDto);
     }
 }
