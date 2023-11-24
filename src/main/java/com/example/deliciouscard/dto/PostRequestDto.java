@@ -6,4 +6,6 @@ import lombok.Getter;
 public class PostRequestDto {
     private String title;
     private String content;
+    private String restaurantName;
+    private String city;
 }

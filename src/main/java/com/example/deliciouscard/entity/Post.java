@@ -27,13 +27,18 @@ public class Post extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> commentList = new ArrayList<>();
+//    @OneToMany(mappedBy = "post")
+//    private List<Comment> commentList = new ArrayList<>();
 
-    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetailsImpl) {
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetailsImpl, Restaurant restaurant) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = userDetailsImpl.getUser();
+        this.restaurant = restaurant;
     }
 
     public void update(PostRequestDto requestDto) {
