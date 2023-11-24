@@ -9,12 +9,14 @@ import com.example.deliciouscard.repository.PostRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -57,5 +59,15 @@ public class CommentService {
             throw new IllegalArgumentException("댓글 작성자만 삭제 가능합니다");
         }
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public void uplikes(Long id, Long commentId, UserDetailsImpl user) {
+        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException(("해당 게시글이 없습니다.")));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new IllegalArgumentException(("해당 댓글이 없습니다.")));
+        if(Objects.equals(comment.getUser().getId(), user.getUser().getId())){
+            throw new IllegalArgumentException("댓글 작성자가 좋아요를 누를 수 없습니다.");
+        }
+        comment.uplikes(user);
     }
 }
