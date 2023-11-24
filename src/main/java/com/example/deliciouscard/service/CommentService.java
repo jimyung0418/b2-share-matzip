@@ -3,7 +3,9 @@ package com.example.deliciouscard.service;
 import com.example.deliciouscard.dto.CommentRequesDto;
 import com.example.deliciouscard.dto.CommentResponseDto;
 import com.example.deliciouscard.entity.Comment;
+import com.example.deliciouscard.entity.CommentLikes;
 import com.example.deliciouscard.entity.Post;
+import com.example.deliciouscard.repository.CommentLikesRepository;
 import com.example.deliciouscard.repository.CommentRepository;
 import com.example.deliciouscard.repository.PostRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
@@ -22,6 +24,7 @@ import java.util.Objects;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final CommentLikesRepository commentLikesRepository;
 
     public CommentResponseDto createComment(Long id, CommentRequesDto req, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException(("해당 게시글이 없습니다.")));
@@ -68,6 +71,13 @@ public class CommentService {
         if(Objects.equals(comment.getUser().getId(), user.getUser().getId())){
             throw new IllegalArgumentException("댓글 작성자가 좋아요를 누를 수 없습니다.");
         }
-        comment.uplikes(user);
+        CommentLikes likes = new CommentLikes(comment,user);
+        List<CommentLikes> commentLikesList = commentLikesRepository.findAllByComment(comment);
+        for(CommentLikes c:commentLikesList){
+            if(Objects.equals(c.getUser().getId(), user.getUser().getId())){
+                throw new IllegalArgumentException ("이미 좋아요를 누른상태입니다.");
+            }
+        }
+        commentLikesRepository.save(likes);
     }
 }

@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 @Getter
@@ -18,8 +21,7 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String cotent;
 
-    @Column
-    private Long likes;
+
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -29,18 +31,18 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "comment")
+    List<CommentLikes> likes = new ArrayList<>();
+
     public Comment(Post post, CommentRequesDto req, UserDetailsImpl userDetails) {
         this.cotent = req.getContent();
         this.user = userDetails.getUser();
         this.post = post;
-        this.likes = (Long) 0l;
+
     }
 
     public void update(CommentRequesDto req) {
         this.cotent = req.getContent();
     }
 
-    public void uplikes(UserDetailsImpl user) {
-        this.likes +=1;
-    }
 }

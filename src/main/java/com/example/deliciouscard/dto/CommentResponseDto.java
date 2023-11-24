@@ -17,6 +17,6 @@ public class CommentResponseDto extends CommonResponseDto{
         this.Content = comment.getCotent();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
-        this.likes = comment.getLikes();
+        this.likes = (long) comment.getLikes().size();
     }
 }
