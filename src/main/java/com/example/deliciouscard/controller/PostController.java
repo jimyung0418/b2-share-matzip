@@ -57,4 +57,14 @@ public class PostController {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(),HttpStatus.BAD_REQUEST.value()));
         }
     }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<CommonResponseDto> commentLikes(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl user){
+        try {
+            postService.uplikes(id,user);
+            return ResponseEntity.ok().body(new CommonResponseDto("좋아요!on/off", HttpStatus.OK.value()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+    }
 }

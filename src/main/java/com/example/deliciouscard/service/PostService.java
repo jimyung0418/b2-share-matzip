@@ -3,7 +3,9 @@ package com.example.deliciouscard.service;
 import com.example.deliciouscard.dto.PostRequestDto;
 import com.example.deliciouscard.dto.PostResponseDto;
 import com.example.deliciouscard.entity.Post;
+import com.example.deliciouscard.entity.PostLikes;
 import com.example.deliciouscard.entity.Restaurant;
+import com.example.deliciouscard.repository.PostLikesRepository;
 import com.example.deliciouscard.repository.PostRepository;
 import com.example.deliciouscard.repository.RestaurantRepository;
 import com.example.deliciouscard.security.UserDetailsImpl;
@@ -21,6 +23,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final PostLikesRepository postLikesRepository;
     private final RestaurantRepository restaurantRepository;
 
     public PostResponseDto createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetailsImpl) {
@@ -74,5 +77,20 @@ public class PostService {
             throw new IllegalArgumentException("게시물 작성자만 수정 가능합니다");
         }
         postRepository.delete(post);
+    }
+    @Transactional
+    public void uplikes(Long id, UserDetailsImpl user) {
+        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException(("해당 게시글이 없습니다.")));
+        if(Objects.equals(post.getUser().getId(), user.getUser().getId())){
+            throw new IllegalArgumentException("게시글 작성자가 좋아요를 누를 수 없습니다.");
+        }
+        PostLikes likes = new PostLikes(post,user);
+        List<PostLikes> postLikesList = postLikesRepository.findAllByPost(post);
+        for(PostLikes p:postLikesList){
+            if(Objects.equals(p.getUser().getId(), user.getUser().getId())){
+                throw new IllegalArgumentException ("이미 좋아요를 누른상태입니다.");
+            }
+        }
+        postLikesRepository.save(likes);
     }
 }

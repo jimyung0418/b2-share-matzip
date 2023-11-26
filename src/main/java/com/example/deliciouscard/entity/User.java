@@ -47,7 +47,10 @@ public class User {
     private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<CommentLikes> likes = new ArrayList<>();
+    private List<CommentLikes> commentlikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<PostLikes> postlikes = new ArrayList<>();
 
 
     public User(UserRequestDto userRequestDto, String encodedPassword) {
