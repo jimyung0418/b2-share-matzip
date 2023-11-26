@@ -19,9 +19,7 @@ public class Comment extends Timestamped{
     private Long id;
 
     @Column(nullable = false)
-    private String cotent;
-
-
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -35,14 +33,14 @@ public class Comment extends Timestamped{
     List<CommentLikes> likes = new ArrayList<>();
 
     public Comment(Post post, CommentRequesDto req, UserDetailsImpl userDetails) {
-        this.cotent = req.getContent();
+        this.content = req.getContent();
         this.user = userDetails.getUser();
         this.post = post;
 
     }
 
     public void update(CommentRequesDto req) {
-        this.cotent = req.getContent();
+        this.content = req.getContent();
     }
 
 }

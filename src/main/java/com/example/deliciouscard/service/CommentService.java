@@ -65,7 +65,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    @Transactional
+
     public void uplikes(Long id, Long commentId, UserDetailsImpl user) {
         Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException(("해당 게시글이 없습니다.")));
         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new IllegalArgumentException(("해당 댓글이 없습니다.")));
@@ -76,9 +76,10 @@ public class CommentService {
         List<CommentLikes> commentLikesList = commentLikesRepository.findAllByComment(comment);
         for(CommentLikes c:commentLikesList){
             if(Objects.equals(c.getUser().getId(), user.getUser().getId())){
-                CommentLikes commentLikes =commentLikesRepository.findByPostAndUser(likes.getComment(), likes.getUser());
+                CommentLikes commentLikes =commentLikesRepository.findByCommentAndUser(likes.getComment(), likes.getUser());
                 commentLikesRepository.delete(commentLikes);
-                return;            }
+                return;
+            }
         }
         commentLikesRepository.save(likes);
     }

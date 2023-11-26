@@ -2,6 +2,7 @@ package com.example.deliciouscard.service;
 
 import com.example.deliciouscard.dto.PostRequestDto;
 import com.example.deliciouscard.dto.PostResponseDto;
+import com.example.deliciouscard.entity.CommentLikes;
 import com.example.deliciouscard.entity.Post;
 import com.example.deliciouscard.entity.PostLikes;
 import com.example.deliciouscard.entity.Restaurant;
@@ -98,7 +99,8 @@ public class PostService {
         List<PostLikes> postLikesList = postLikesRepository.findAllByPost(post);
         for(PostLikes p:postLikesList){
             if(Objects.equals(p.getUser().getId(), user.getUser().getId())){
-                postLikesRepository.delete(likes);
+                PostLikes postLikes =postLikesRepository.findByPostAndUser(likes.getPost(), likes.getUser());
+                postLikesRepository.delete(postLikes);
                 return;
             }
         }
