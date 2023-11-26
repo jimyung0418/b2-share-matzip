@@ -21,7 +21,12 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<CommonResponseDto> createPost(@RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
-        PostResponseDto postResponseDto = postService.createPost(postRequestDto,userDetailsImpl);
+        PostResponseDto postResponseDto = null;
+        try {
+            postResponseDto = postService.createPost(postRequestDto,userDetailsImpl);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
         return ResponseEntity.ok().body(postResponseDto);
     }
 

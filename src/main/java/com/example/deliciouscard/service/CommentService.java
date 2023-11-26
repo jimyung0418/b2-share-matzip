@@ -5,6 +5,7 @@ import com.example.deliciouscard.dto.CommentResponseDto;
 import com.example.deliciouscard.entity.Comment;
 import com.example.deliciouscard.entity.CommentLikes;
 import com.example.deliciouscard.entity.Post;
+import com.example.deliciouscard.entity.PostLikes;
 import com.example.deliciouscard.repository.CommentLikesRepository;
 import com.example.deliciouscard.repository.CommentRepository;
 import com.example.deliciouscard.repository.PostRepository;
@@ -75,8 +76,9 @@ public class CommentService {
         List<CommentLikes> commentLikesList = commentLikesRepository.findAllByComment(comment);
         for(CommentLikes c:commentLikesList){
             if(Objects.equals(c.getUser().getId(), user.getUser().getId())){
-                throw new IllegalArgumentException ("이미 좋아요를 누른상태입니다.");
-            }
+                CommentLikes commentLikes =commentLikesRepository.findByPostAndUser(likes.getComment(), likes.getUser());
+                commentLikesRepository.delete(commentLikes);
+                return;            }
         }
         commentLikesRepository.save(likes);
     }
