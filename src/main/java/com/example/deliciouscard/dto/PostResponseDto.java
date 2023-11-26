@@ -14,6 +14,7 @@ public class PostResponseDto extends CommonResponseDto{
     private String nickName;
     private String restaurantName;
     private String city;
+    private Long likes;
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
@@ -23,5 +24,6 @@ public class PostResponseDto extends CommonResponseDto{
         this.nickName = post.getUser().getNickname();
         this.restaurantName = post.getRestaurant().getRestaurantName();
         this.city = post.getRestaurant().getCity();
+        this.likes = (long) post.getLikes().size();
     }
 }

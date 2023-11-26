@@ -31,6 +31,9 @@ public class Post extends Timestamped{
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    @OneToMany(mappedBy = "post")
+    List<PostLikes> likes = new ArrayList<>();
+
     public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetailsImpl, Restaurant restaurant) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
